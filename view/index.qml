@@ -5,7 +5,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.1
-import 'pages'
+//import 'pages'
 import 'styles'
 
 Window {
@@ -18,15 +18,21 @@ Window {
     property var defControl : ["关闭","启用"];
     property var _configs : JSON.parse(qmlSettings.profileConfigs);
 
+    function getSystemDateTime() {
+        var dateTime = Qt.formatDateTime(new Date(), "yyyy/MM/dd HH:mm:ss");
+        return dateTime;
+    }
+
+
     ListModel {
         id : listModel
     }
 
     TableView {
         id: listView
-        anchors.fill:  parent
+        anchors.fill: parent
         model: listModel
-        clip: true
+        clip: false
 
 
         TableViewColumn {
@@ -49,6 +55,17 @@ Window {
             role: "sn"
             title: "SN"
         }
+
+        TableViewColumn {
+            role: "userRequestTime"
+            title: "客户请求最后时间"
+        }
+
+        TableViewColumn {
+            role: "deviceResponseTime"
+            title: "接收设备最后时间"
+        }
+
         TableViewColumn {
             role: "control"
             title: "控制"
@@ -58,6 +75,8 @@ Window {
                     var index = defControl.indexOf(text);
                     index ^= 1;
                     text = defControl[index];
+                    _configs[styleData.row].enable = (index==0)?true:false;
+                    qmlSettings.profileConfigs = JSON.stringify(_configs);
                 }
             }
         }
@@ -73,7 +92,9 @@ Window {
                 "comment" : _configs[i].comment,
                 "status" : defStatus[0],
                 "sn" : "Initial",
-                "control" : defControl[0]
+                "userRequestTime" : "",
+                "deviceResponseTime" : "",
+                "control" : (_configs[i].enable)?defControl[0]:defControl[1]
             });
         }
     }
@@ -85,7 +106,17 @@ Window {
             listModel.get(id)["status"] = defStatus[(status)?1:0];
         }
         onGuiSnChanged : { // id , sn
-            listModel.get(id)["sn"] = "sn";
+            var obj = listModel.get(id);
+            obj["sn"] = sn;
+            obj["deviceResponseTime"] = getSystemDateTime();
+        }
+
+        onGuiUserRequstTimeChanged : {
+            var obj = listModel.get(id);
+            obj["userRequestTime"] = getSystemDateTime();
         }
     }
+
+
+
 }

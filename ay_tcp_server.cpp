@@ -67,24 +67,25 @@ void AtTcpServer::handleClientReadyRead(QObject *socketObject)
         if ( index >= 0 ) {
             bool ok;
             QString command = socket->readAll();
-            qDebug() << command;
             if ( command == setting.general.request + setting.general.userEndingSymbol) {
                 QHostAddress ipv4Address(socket->localAddress().toIPv4Address());
                 QString address = ipv4Address.toString();
-                qDebug() << address;
                 AtCongexTcpClient *congexClient =
                         ((AtApplication *)root)->workThread->list[address];
 
+
                 if ( congexClient != NULL ) {
-                    qDebug() << "AAAA";
                     QString data = congexClient->getData();
+                    qDebug() << data;
                     if ( data != setting.general.noRead ) {
                         socket->write(data.toUtf8());
                     }
+                    ((AtApplication *)root)->guiSignal->guiUserRequstTimeChanged(congexClient->getId());
+                }
                 } else {
                     qDebug() << "This address don't support.";
                 }
-            }
+
         } else {
             qDebug() << "The client don't exists";
         }

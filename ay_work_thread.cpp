@@ -12,11 +12,12 @@ void AtWorkThread::init()
 
     for (int i=0; i<setting.profile.configsArray.size(); i++ ) {
         QJsonObject configsObj = setting.profile.configsArray[i].toObject();
-        qDebug() << configsObj["deviceIp"].toString() << " " << configsObj["devicePort"].toInt();
+
         AtCongexTcpClient *client = new AtCongexTcpClient(i,
                     configsObj["deviceIp"].toString(),configsObj["devicePort"].toInt());
         qDebug() << "ServiceIp[" + QString::number(i,10) + "]=" +  configsObj["deviceIp"].toString() + ":" + configsObj["devicePort"].toString();
         client->start();
+        client->setEnable(configsObj["enable"].toBool());
         list[configsObj["serviceIp"].toString()] = client;
     }
 }

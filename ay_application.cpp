@@ -19,10 +19,7 @@ AtApplication::AtApplication(int argc, char *argv[])
 
     _engine->rootContext()->setContextProperty("Core", guiSignal);
     _engine->rootContext()->setContextProperty("qmlSettings", qmlSettings);
-
     _engine->load(QUrl(QStringLiteral("qrc:/view/index.qml")));
-
-
 }
 
 void AtApplication::systemInit()

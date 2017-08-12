@@ -8,6 +8,9 @@ void AtCongexTcpClient::init(int id, QString address, int port)
     _port = port;
     _socket = NULL;
     connect(this, &AtCongexTcpClient::_write, this, &AtCongexTcpClient::handleWrite);
+    connect(this, &AtCongexTcpClient::_connect, this, &AtCongexTcpClient::handleSocketConnect);
+    connect(this, &AtCongexTcpClient::_disconnect, this, &AtCongexTcpClient::handleSocketDisconnect);
+
 }
 
 void AtCongexTcpClient::write(QString message)
@@ -27,14 +30,15 @@ QString AtCongexTcpClient::parseResult(bool *ok, QString data)
         strList = data.split(setting.general.deviceEndingSymbol,QString::SkipEmptyParts);
         len = strList.length();
 
-
         if ( len > 0 ) {
             QString result;
             for ( int i=0; i<count; i++ ) {
                  result = strList.at(i);
                 ((AtApplication *)root)->guiSignal->guiSnChanged(_id, result);
             }
-            _data = result;
+            _mutex.lock();
+            _dataTmp = result;
+            _mutex.unlock();
         }
 
         if ( data.endsWith(setting.general.deviceEndingSymbol) ) {
@@ -58,50 +62,78 @@ void AtCongexTcpClient::handleSocketReadyRead()
     } else {
         bool ok;
         _buffer += _socket->readAll();
-        qDebug() << "GetData=" << _buffer;
-        ((AtApplication *)root)->guiSignal->guiSnChanged(_id, _buffer);
-        //_buffer = parseResult(&ok, _buffer);
+        _buffer = parseResult(&ok,_buffer);
     }
 }
 
 QString AtCongexTcpClient::getData()
 {
+    _mutex.lock();
+    _data = _dataTmp;
+    _mutex.unlock();
+    return _data;
+}
 
-    return _buffer;
+void AtCongexTcpClient::closeSocket()
+{
+    if ( _socket != NULL ) {
+        _socket->abort();
+        //_socket->close();
+        /* disconnect */
+        if ( _socket != NULL ) {
+            QObject::disconnect(_socket, SIGNAL(disconnected()), this, SLOT(handleSocketReconnect()));
+            QObject::disconnect(_socket, SIGNAL(readyRead()), this ,SLOT(handleSocketReadyRead()));
+            _socket = NULL;
+        }
+    }
+}
+
+void AtCongexTcpClient::handleSocketReconnect()
+{
+    closeSocket();
+    _connect();
+    //handleSocketConnect();
 }
 
 void AtCongexTcpClient::handleSocketDisconnect()
 {
-    _socket->abort();
-    _socket->close();
+    closeSocket();
+}
 
-    /* disconnect */
-    if ( _socket != NULL ) {
-        QObject::disconnect(_socket, SIGNAL(disconnected()), this, SLOT(handleSocketDisconnect()));
-        QObject::disconnect(_socket, SIGNAL(readyRead()), this ,SLOT(handleSocketReadyRead()));
-        _socket = NULL;
+void AtCongexTcpClient::setEnable(bool val)
+{
+    _enable = val;
+    if ( !_enable ) {
+        _disconnect();
+    } else {
+        _connect();
     }
-
-    handleSocketConnect();
 }
 
 void AtCongexTcpClient::handleSocketConnect()
 {
     qDebug() << "handleSocketConnect ";
+
     while (true) {
+        if ( !_enable ) return ;
+
         if ( _socket == NULL ) {
-            isConnected = false;
+            _isConnected = false;
             _socket = new QTcpSocket(this);
             if ( _socket ) {
-                connect(_socket, SIGNAL(disconnected()), this, SLOT(handleSocketDisconnect()));
+                connect(_socket, SIGNAL(disconnected()), this, SLOT(handleSocketReconnect()));
                 connect(_socket, SIGNAL(readyRead()), this ,SLOT(handleSocketReadyRead()));
             }
         }
 
-        if ( _socket != NULL ) {
+        if ( _socket != NULL && !_socket->isOpen()) {
             _socket->connectToHost(_address, _port);
-
             if ( _socket->waitForConnected(1000)){
+                _isConnected = true;
+                while ( !((AtApplication *)root)->isGuiRunning() ) {
+                    QThread::sleep(1);
+                }
+
                 ((AtApplication *)root)->guiSignal->guiStatusChanged(_id, true);
                 qDebug() << "Success .(" + _address + ":" + QString::number(_port,10) + ") ";
                 break;
@@ -121,10 +153,14 @@ void AtCongexTcpClient::handleWrite(QString message)
     _socket->flush();
 }
 
+int AtCongexTcpClient::getId()
+{
+    return _id;
+}
+
 void AtCongexTcpClient::start()
 {
     this->moveToThread(&_thread);
-    QObject::connect(&_thread, &QThread::started, this, &AtCongexTcpClient::handleSocketConnect);
     QObject::connect(&_thread, &QThread::finished, this, &QObject::deleteLater);
     _thread.start();
  }

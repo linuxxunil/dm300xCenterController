@@ -45,7 +45,7 @@ public :
         _setting->beginGroup(_group);
         request = _setting->value("request", QVariant("LNO")).toString();
         noRead = _setting->value("noRead", QVariant("NR")).toString();
-        deviceEndingSymbol = _setting->value("deviceEndingSymbol", QVariant("")).toString();
+        deviceEndingSymbol = _setting->value("deviceEndingSymbol", QVariant("\r\n")).toString();
         userEndingSymbol = _setting->value("userEndingSymbol", QVariant("\r\n")).toString();
 
         _setting->endGroup();

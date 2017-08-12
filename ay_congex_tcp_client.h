@@ -13,13 +13,14 @@ class AtCongexTcpClient : public AtController
 private :
     QTcpSocket *_socket;
     QString _buffer;
-    QString _data;
+    QString _data, _dataTmp;
     QThread _thread;
     QString _address;
     int _port;
     int _id;
-    bool isConnected = false;
-    //QMutex mutex;
+    bool _isConnected = false;
+    QMutex _mutex;
+    bool _enable = true;
 
 public:
     AtCongexTcpClient(int id, QString address, int port) {
@@ -32,13 +33,19 @@ public:
     void write(QString message);
     QString getData();
     QString parseResult(bool *ok ,QString data);
+    int getId();
+    void setEnable(bool val);
+    void closeSocket();
 
 signals:
     void _write(QString message);
+    void _connect();
+    void _disconnect();
 
 private slots:
     void handleSocketConnect();
     void handleSocketReadyRead();
+    void handleSocketReconnect();
     void handleSocketDisconnect();
 
 public slots:
