@@ -23,11 +23,11 @@ private :
     bool _enable = true;
 
 public:
-    AtCongexTcpClient(int id, QString address, int port) {
-        init(id, address, port);
+    AtCongexTcpClient(bool enable, int id, QString address, int port) {
+        init(enable, id, address, port);
     }
 
-    void init(int id, QString address, int port);
+    void init(bool enable ,int id, QString address, int port);
     void start();
     void stop();
     void write(QString message);

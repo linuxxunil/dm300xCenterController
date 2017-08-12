@@ -50,6 +50,13 @@ Window {
         TableViewColumn {
             role: "status"
             title: "状态"
+            delegate : Text {
+
+                text : styleData.value
+                color : (styleData.value === defStatus[0])?"red":"green";
+
+
+            }
         }
         TableViewColumn {
             role: "sn"
@@ -91,9 +98,10 @@ Window {
                 "ipAddress": _configs[i].serviceIp,
                 "comment" : _configs[i].comment,
                 "status" : defStatus[0],
+                "statusColor" : "red",
                 "sn" : "Initial",
-                "userRequestTime" : "",
-                "deviceResponseTime" : "",
+                "userRequestTime" : "Initial",
+                "deviceResponseTime" : "Initial",
                 "control" : (_configs[i].enable)?defControl[0]:defControl[1]
             });
         }
@@ -103,7 +111,8 @@ Window {
         target: Core
         onGuiStatusChanged : { // id , status
             console.log("id="+id+",status="+status)
-            listModel.get(id)["status"] = defStatus[(status)?1:0];
+            var obj = listModel.get(id);
+            obj["status"] = defStatus[(status)?1:0];
         }
         onGuiSnChanged : { // id , sn
             var obj = listModel.get(id);

@@ -1,12 +1,13 @@
 #include "ay_congex_tcp_client.h"
 #include "ay_application.h"
 
-void AtCongexTcpClient::init(int id, QString address, int port)
+void AtCongexTcpClient::init(bool enable , int id, QString address, int port)
 {
     _id = id;
     _address = address;
     _port = port;
     _socket = NULL;
+    _enable = enable;
     connect(this, &AtCongexTcpClient::_write, this, &AtCongexTcpClient::handleWrite);
     connect(this, &AtCongexTcpClient::_connect, this, &AtCongexTcpClient::handleSocketConnect);
     connect(this, &AtCongexTcpClient::_disconnect, this, &AtCongexTcpClient::handleSocketDisconnect);
@@ -85,6 +86,7 @@ void AtCongexTcpClient::closeSocket()
             QObject::disconnect(_socket, SIGNAL(readyRead()), this ,SLOT(handleSocketReadyRead()));
             _socket = NULL;
         }
+        ((AtApplication *)root)->guiSignal->guiStatusChanged(_id, false);
     }
 }
 
@@ -102,12 +104,11 @@ void AtCongexTcpClient::handleSocketDisconnect()
 
 void AtCongexTcpClient::setEnable(bool val)
 {
-    _enable = val;
-    if ( !_enable ) {
-        _disconnect();
-    } else {
-        _connect();
+    if ( _enable != val ) {
+        if ( val ) _connect();
+        else _disconnect();
     }
+    _enable = val;
 }
 
 void AtCongexTcpClient::handleSocketConnect()
@@ -161,6 +162,9 @@ int AtCongexTcpClient::getId()
 void AtCongexTcpClient::start()
 {
     this->moveToThread(&_thread);
+    if ( _enable ) {
+        QObject::connect(&_thread, &QThread::started, this, &AtCongexTcpClient::handleSocketConnect);
+    }
     QObject::connect(&_thread, &QThread::finished, this, &QObject::deleteLater);
     _thread.start();
  }

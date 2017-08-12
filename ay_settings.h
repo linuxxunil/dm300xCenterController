@@ -124,12 +124,15 @@ public :
     void reload() {
         _setting->beginGroup(_group);
         configs = configs = _setting->value("configs",
-                                            "[{\"enable\":true,\"modelName\":\"DM300X-1\",\"serviceIp\" : \"192.168.33.211\",\"deviceIp\":\"192.168.33.51\",\"devicePort\":80,\"comment\":\"SMT-1\"}"
+                                            "[{\"enable\":true,\"modelName\":\"DM300X-1\",\"serviceIp\" : \"192.168.1.211\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3001,\"comment\":\"SMT-1\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-2\",\"serviceIp\" : \"192.168.1.212\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3002,\"comment\":\"SMT-2\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-3\",\"serviceIp\" : \"192.168.1.213\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3003,\"comment\":\"SMT-3\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-4\",\"serviceIp\" : \"192.168.1.214\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3004,\"comment\":\"SMT-4\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-5\",\"serviceIp\" : \"192.168.1.215\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3005,\"comment\":\"SMT-5\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-6\",\"serviceIp\" : \"192.168.1.216\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3006,\"comment\":\"SMT-6\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-7\",\"serviceIp\" : \"192.168.1.217\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3007,\"comment\":\"SMT-7\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-8\",\"serviceIp\" : \"192.168.1.218\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3008,\"comment\":\"SMT-8\"}"
                                             "]").toString();
-                                            //",{\"enable\":true,\"modelName\":\"DM300X-2\",\"serviceIp\" : \"192.168.33.212\",\"deviceIp\":\"192.168.33.52\",\"devicePort\":80,\"comment\":\"SMT-2\"}"
-                                            //",{\"enable\":true,\"modelName\":\"DM300X-3\",\"serviceIp\" : \"192.168.33.213\",\"deviceIp\":\"192.168.33.53\",\"devicePort\":80,\"comment\":\"SMT-3\"}"
-                                            //",{\"enable\":true,\"modelName\":\"DM300X-4\",\"serviceIp\" : \"192.168.33.214\",\"deviceIp\":\"192.168.33.54\",\"devicePort\":80,\"comment\":\"SMT-4\"}"
-                                            //",{\"enable\":true,\"modelName\":\"DM300X-5\",\"serviceIp\" : \"192.168.33.215\",\"deviceIp\":\"192.168.33.55\",\"devicePort\":80,\"comment\":\"SMT-5\"}"
 
         _setting->endGroup();
     }
