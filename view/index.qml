@@ -35,21 +35,21 @@ Window {
         clip: false
 
 
-        TableViewColumn {
-            role: "modelName"
-            title: "机型"
-        }
+
         TableViewColumn {
             role: "ipAddress"
             title: "IP位置"
+            width: 150
         }
         TableViewColumn {
             role: "comment"
             title: "说明"
+            width : 150
         }
         TableViewColumn {
             role: "status"
             title: "状态"
+             width: 50
             delegate : Text {
 
                 text : styleData.value
@@ -71,6 +71,10 @@ Window {
         TableViewColumn {
             role: "deviceResponseTime"
             title: "接收设备最后时间"
+        }
+        TableViewColumn {
+            role: "modelName"
+            title: "机型"
         }
 
         TableViewColumn {

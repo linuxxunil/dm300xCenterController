@@ -127,7 +127,7 @@ void AtCongexTcpClient::handleSocketConnect()
             }
         }
 
-        if ( _socket != NULL && !_socket->isOpen()) {
+        if ( _socket != NULL ) {
             _socket->connectToHost(_address, _port);
             if ( _socket->waitForConnected(1000)){
                 _isConnected = true;
@@ -139,7 +139,7 @@ void AtCongexTcpClient::handleSocketConnect()
                 qDebug() << "Success .(" + _address + ":" + QString::number(_port,10) + ") ";
                 break;
             }
-            qDebug() << "Failure .(" + _address + ":" + _port + ") ";
+            qDebug() << "Failure .(" + _address + ":" + QString::number(_port,10) + ") ";
             ((AtApplication *)root)->guiSignal->guiStatusChanged(_id, false);
         }
         QThread::msleep(1000);

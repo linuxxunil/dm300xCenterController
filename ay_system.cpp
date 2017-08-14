@@ -71,13 +71,14 @@ bool AtSystem::setSystemDateTime(QString val)
 bool AtSystem::setIpAddress()
 {
     QString cmd = "ip addr flush dev " + setting.nic.nicIface + ";"
-                  "ifconfig " + setting.nic.nicIface + " " + setting.nic.nicAddress + " netmask " + setting.nic.nicNetmask + ";";
-                  "route default gw " + setting.nic.nicGateway + ";"
+                  "ifconfig " + setting.nic.nicIface + " " + setting.nic.nicAddress + " netmask " + setting.nic.nicNetmask + ";"
+                  "route add default gw " + setting.nic.nicGateway + " dev "+ setting.nic.nicIface + ";"
                   "echo nameserver " + setting.nic.nicDns1 + "> /etc/resolv.conf;";
 
     for (int i=0; i<setting.profile.configsArray.size(); i++ ) {
         QJsonObject configsObj = setting.profile.configsArray[i].toObject();
         cmd += "ip addr add " + configsObj["serviceIp"].toString() + "/24 dev " + setting.nic.nicIface + ";";
     }
+    qDebug() << cmd;
     return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
 }

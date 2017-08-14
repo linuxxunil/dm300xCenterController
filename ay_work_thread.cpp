@@ -15,7 +15,7 @@ void AtWorkThread::init()
 
         AtCongexTcpClient *client = new AtCongexTcpClient(configsObj["enable"].toBool(),i,
                     configsObj["deviceIp"].toString(),configsObj["devicePort"].toInt());
-        qDebug() << "ServiceIp[" + QString::number(i,10) + "]=" +  configsObj["deviceIp"].toString() + ":" + configsObj["devicePort"].toString();
+        qDebug() << "DeviceIp[" + QString::number(i,10) + "]=" +  configsObj["deviceIp"].toString() + ":" + QString::number(configsObj["devicePort"].toInt(),10);
         client->start();
         list[configsObj["serviceIp"].toString()] = client;
     }

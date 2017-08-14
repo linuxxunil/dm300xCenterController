@@ -71,6 +71,7 @@ public :
     mutable QString bindAddress; // any or ipaddress
     mutable int port;
     mutable int maxClients;
+    mutable QString suffix;
 
     ~AtSettingsTcpServer() {
     }
@@ -87,6 +88,7 @@ public :
         _setting->beginGroup(_group);
         bindAddress = _setting->value("bindAddress", QVariant("any")).toString();
         port = _setting->value("port", QVariant("713")).toInt();
+        suffix = _setting->value("suffix", QVariant("\r\n")).toString();
         maxClients = _setting->value("maxClients", QVariant("30")).toInt();
         _setting->endGroup();
     }
@@ -95,6 +97,7 @@ public :
         _setting->beginGroup(_group);
         _setting->setValue("bindAddress", QVariant(bindAddress));
         _setting->setValue("port", QVariant(port));
+        _setting->setValue("suffix", QVariant(suffix));
         _setting->setValue("maxClients", QVariant(maxClients));  //only one
         _setting->endGroup();
     }
@@ -124,14 +127,14 @@ public :
     void reload() {
         _setting->beginGroup(_group);
         configs = configs = _setting->value("configs",
-                                            "[{\"enable\":true,\"modelName\":\"DM300X-1\",\"serviceIp\" : \"192.168.1.211\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3001,\"comment\":\"SMT-1\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-2\",\"serviceIp\" : \"192.168.1.212\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3002,\"comment\":\"SMT-2\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-3\",\"serviceIp\" : \"192.168.1.213\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3003,\"comment\":\"SMT-3\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-4\",\"serviceIp\" : \"192.168.1.214\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3004,\"comment\":\"SMT-4\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-5\",\"serviceIp\" : \"192.168.1.215\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3005,\"comment\":\"SMT-5\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-6\",\"serviceIp\" : \"192.168.1.216\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3006,\"comment\":\"SMT-6\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-7\",\"serviceIp\" : \"192.168.1.217\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3007,\"comment\":\"SMT-7\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-8\",\"serviceIp\" : \"192.168.1.218\",\"deviceIp\":\"127.0.0.1\",\"devicePort\":3008,\"comment\":\"SMT-8\"}"
+                                            "[{\"enable\":true,\"modelName\":\"DM300X-1\",\"serviceIp\" : \"192.168.31.211\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3001,\"comment\":\"SMT-1\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-2\",\"serviceIp\" : \"192.168.31.212\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3002,\"comment\":\"SMT-2\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-3\",\"serviceIp\" : \"192.168.31.213\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3003,\"comment\":\"SMT-3\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-4\",\"serviceIp\" : \"192.168.31.214\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3004,\"comment\":\"SMT-4\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-5\",\"serviceIp\" : \"192.168.31.215\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3005,\"comment\":\"SMT-5\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-6\",\"serviceIp\" : \"192.168.31.216\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3006,\"comment\":\"SMT-6\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-7\",\"serviceIp\" : \"192.168.31.217\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3007,\"comment\":\"SMT-7\"}"
+                                            ",{\"enable\":true,\"modelName\":\"DM300X-8\",\"serviceIp\" : \"192.168.31.218\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3008,\"comment\":\"SMT-8\"}"
                                             "]").toString();
 
         _setting->endGroup();
@@ -218,10 +221,10 @@ public :
         _setting->beginGroup(_group);
         nicIface = _setting->value("nicIface","eth0").toString();
         nicType = _setting->value("nicType","static").toString();
-        nicAddress = _setting->value("nicAddress","192.168.33.216").toString();
+        nicAddress = _setting->value("nicAddress","192.168.31.216").toString();
         nicNetmask = _setting->value("nicNetmask","255.255.255.0").toString();
-        nicGateway = _setting->value("nicGateway","192.168.33.254").toString();
-        nicDns1 = _setting->value("nicDns1","192.168.33.254").toString();
+        nicGateway = _setting->value("nicGateway","192.168.31.1").toString();
+        nicDns1 = _setting->value("nicDns1","192.168.31.1").toString();
         _setting->endGroup();
     }
 

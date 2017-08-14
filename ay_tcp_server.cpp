@@ -77,7 +77,8 @@ void AtTcpServer::handleClientReadyRead(QObject *socketObject)
                 if ( congexClient != NULL ) {
                     QString data = congexClient->getData();
                     qDebug() << data;
-                    if ( data != setting.general.noRead ) {
+                    if ( data != "" && data != setting.general.noRead ) {
+                        data += setting.tcpServer.suffix;
                         socket->write(data.toUtf8());
                     }
                     ((AtApplication *)root)->guiSignal->guiUserRequstTimeChanged(congexClient->getId());
