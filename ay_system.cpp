@@ -16,6 +16,32 @@ bool AtSystem::execShutdown()
     return _process->startDetached("poweroff");
 }
 
+
+bool AtSystem::execAppRestart()
+{
+    return _process->startDetached("/opt/service restart&");
+}
+
+QStringList AtSystem::getUpgradeImages()
+{
+    QString cmd = "/opt/upgrade.sh";
+    QStringList arg;
+    arg << "list";
+    _process->start(cmd, arg, QIODevice::ReadOnly );
+    _process->waitForFinished();
+    QString data = _process->readAllStandardOutput();
+    QStringList list = data.split("\n");
+    list.removeLast();
+    return list;
+}
+
+bool AtSystem::execResetDefault()
+{
+    QString cmd ;
+    cmd = "rm -rf " + setting.path ;
+    return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
+}
+
 bool AtSystem::execSetTcpRecycle()
 { 
     return QProcess::execute("/bin/bash", QStringList() << "-c" <<  "echo 1 > /proc/sys/net/ipv4/tcp_tw_recycle");
@@ -79,6 +105,15 @@ bool AtSystem::setIpAddress()
         QJsonObject configsObj = setting.profile.configsArray[i].toObject();
         cmd += "ip addr add " + configsObj["serviceIp"].toString() + "/24 dev " + setting.nic.nicIface + ";";
     }
-    qDebug() << cmd;
+    //qDebug() << cmd;
     return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
+}
+
+void AtSystem::execUpgrade(QString val)
+{
+    qDebug() << val;
+    QString cmd = "/opt/upgrade.sh";
+    QStringList arg;
+    arg << "upgrade" << _key << val;
+    _process->startDetached(cmd, arg );
 }

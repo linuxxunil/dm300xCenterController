@@ -28,5 +28,22 @@
         <file>view/styles/AtTimer.qml</file>
         <file>view/styles/AtTimeTextInput.qml</file>
         <file>view/index.qml</file>
+        <file>view/pages/Settings.qml</file>
+        <file>view/images/about.ico</file>
+        <file>view/images/about48.ico</file>
+        <file>view/images/nic.ico</file>
+        <file>view/images/nic48.ico</file>
+        <file>view/images/settings.ico</file>
+        <file>view/pages/NicSetting.qml</file>
+        <file>view/pages/About.qml</file>
+        <file>view/images/general48.ico</file>
+        <file>view/images/general.ico</file>
+        <file>view/pages/GeneralSetting.qml</file>
+        <file>view/images/profile48.ico</file>
+        <file>view/images/profile.ico</file>
+        <file>view/pages/ProfileSetting.qml</file>
+        <file>view/pages/SystemSetting.qml</file>
+        <file>view/images/system48.ico</file>
+        <file>view/images/system.ico</file>
     </qresource>
 </RCC>

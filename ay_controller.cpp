@@ -19,7 +19,7 @@ AtController::AtController()     {
         // for old hardware
         setting.version.hardwareVersion = (setting.version.hardwareVersion=="0.1")?"0.1":"1.0";
         setting.version.softwareVersion = "1.0.0.0.0";
-        setting.version.description = "Standard Beta";
+        setting.version.description = "Standard";
         setting.version.contact = "www.ateam.com.cn";
 
         qDebug() << "HardwareVersion : " + setting.version.hardwareVersion ;
@@ -37,6 +37,9 @@ AtController::~AtController() {
 
 /*
 v1.0.0.0.0
-*Inital Project
-*
+* add Settings Page
+*   - General
+*   - Nic
+*   - System
+*   - About
 */

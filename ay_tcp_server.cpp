@@ -67,7 +67,7 @@ void AtTcpServer::handleClientReadyRead(QObject *socketObject)
         if ( index >= 0 ) {
             bool ok;
             QString command = socket->readAll();
-            if ( command == setting.general.request + setting.general.userEndingSymbol) {
+            if ( command == setting.general.userRequest + setting.general.userEndingSymbol) {
                 QHostAddress ipv4Address(socket->localAddress().toIPv4Address());
                 QString address = ipv4Address.toString();
                 AtCongexTcpClient *congexClient =
@@ -77,8 +77,8 @@ void AtTcpServer::handleClientReadyRead(QObject *socketObject)
                 if ( congexClient != NULL ) {
                     QString data = congexClient->getData();
                     qDebug() << data;
-                    if ( data != "" && data != setting.general.noRead ) {
-                        data += setting.tcpServer.suffix;
+                    if ( data != "" && data != setting.general.deviceNoRead ) {
+                        data += setting.general.userEndingSymbol;
                         socket->write(data.toUtf8());
                     }
                     ((AtApplication *)root)->guiSignal->guiUserRequstTimeChanged(congexClient->getId());

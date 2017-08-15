@@ -16,8 +16,12 @@ private :
     static QString _key;//"http://www.ateam.com.cn";
 
 public:
+    static void execUpgrade(QString val);
     static bool execReboot();
     static bool execShutdown();
+    static bool execAppRestart();
+    static bool execResetDefault();
+    static QStringList getUpgradeImages();
     static bool writeLog(QString text);
     static bool setSystemDate(QString val);
     static bool setSystemTime(QString val);

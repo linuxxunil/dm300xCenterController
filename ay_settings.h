@@ -24,9 +24,9 @@ private :
 
 public :
     int size;
-    QString request;
+    QString userRequest;
     QString response;
-    QString noRead;
+    QString deviceNoRead;
     QString deviceEndingSymbol;
     QString userEndingSymbol;
 
@@ -43,9 +43,9 @@ public :
 
     void reload() {
         _setting->beginGroup(_group);
-        request = _setting->value("request", QVariant("LNO")).toString();
-        noRead = _setting->value("noRead", QVariant("NR")).toString();
+        deviceNoRead = _setting->value("deviceNoRead", QVariant("NR")).toString();
         deviceEndingSymbol = _setting->value("deviceEndingSymbol", QVariant("\r\n")).toString();
+        userRequest = _setting->value("userRequest", QVariant("LNO")).toString();
         userEndingSymbol = _setting->value("userEndingSymbol", QVariant("\r\n")).toString();
 
         _setting->endGroup();
@@ -53,9 +53,10 @@ public :
 
     void sync() {
         _setting->beginGroup(_group);
-        _setting->setValue("request", QVariant(request));
-        _setting->setValue("noRead", QVariant(noRead));
+
+        _setting->setValue("deviceNoRead", QVariant(deviceNoRead));
         _setting->setValue("deviceEndingSymbol", QVariant(deviceEndingSymbol));
+        _setting->setValue("userRequest", QVariant(userRequest));
         _setting->setValue("userEndingSymbol", QVariant(userEndingSymbol));
 
         _setting->endGroup();
@@ -71,7 +72,7 @@ public :
     mutable QString bindAddress; // any or ipaddress
     mutable int port;
     mutable int maxClients;
-    mutable QString suffix;
+    //mutable QString suffix;
 
     ~AtSettingsTcpServer() {
     }
@@ -87,8 +88,8 @@ public :
     void reload() {
         _setting->beginGroup(_group);
         bindAddress = _setting->value("bindAddress", QVariant("any")).toString();
-        port = _setting->value("port", QVariant("713")).toInt();
-        suffix = _setting->value("suffix", QVariant("\r\n")).toString();
+        port = _setting->value("port", QVariant("712")).toInt();
+        //suffix = _setting->value("suffix", QVariant("\r\n")).toString();
         maxClients = _setting->value("maxClients", QVariant("30")).toInt();
         _setting->endGroup();
     }
@@ -97,7 +98,7 @@ public :
         _setting->beginGroup(_group);
         _setting->setValue("bindAddress", QVariant(bindAddress));
         _setting->setValue("port", QVariant(port));
-        _setting->setValue("suffix", QVariant(suffix));
+        //_setting->setValue("suffix", QVariant(suffix));
         _setting->setValue("maxClients", QVariant(maxClients));  //only one
         _setting->endGroup();
     }
@@ -127,14 +128,14 @@ public :
     void reload() {
         _setting->beginGroup(_group);
         configs = configs = _setting->value("configs",
-                                            "[{\"enable\":true,\"modelName\":\"DM300X-1\",\"serviceIp\" : \"192.168.31.211\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3001,\"comment\":\"SMT-1\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-2\",\"serviceIp\" : \"192.168.31.212\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3002,\"comment\":\"SMT-2\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-3\",\"serviceIp\" : \"192.168.31.213\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3003,\"comment\":\"SMT-3\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-4\",\"serviceIp\" : \"192.168.31.214\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3004,\"comment\":\"SMT-4\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-5\",\"serviceIp\" : \"192.168.31.215\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3005,\"comment\":\"SMT-5\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-6\",\"serviceIp\" : \"192.168.31.216\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3006,\"comment\":\"SMT-6\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-7\",\"serviceIp\" : \"192.168.31.217\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3007,\"comment\":\"SMT-7\"}"
-                                            ",{\"enable\":true,\"modelName\":\"DM300X-8\",\"serviceIp\" : \"192.168.31.218\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3008,\"comment\":\"SMT-8\"}"
+                                            "[{\"enable\":true,\"modelName\":\"DM300X-1\",\"serviceIp\" : \"192.168.31.211\",\"deviceIp\":\"192.168.31.65\",\"devicePort\":23,\"comment\":\"SMT-1\"}"
+                                            ",{\"enable\":false,\"modelName\":\"DM300X-2\",\"serviceIp\" : \"192.168.31.212\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3002,\"comment\":\"SMT-2\"}"
+                                            ",{\"enable\":false,\"modelName\":\"DM300X-3\",\"serviceIp\" : \"192.168.31.213\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3003,\"comment\":\"SMT-3\"}"
+                                            ",{\"enable\":false,\"modelName\":\"DM300X-4\",\"serviceIp\" : \"192.168.31.214\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3004,\"comment\":\"SMT-4\"}"
+                                            ",{\"enable\":false,\"modelName\":\"DM300X-5\",\"serviceIp\" : \"192.168.31.215\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3005,\"comment\":\"SMT-5\"}"
+                                            ",{\"enable\":false,\"modelName\":\"DM300X-6\",\"serviceIp\" : \"192.168.31.216\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3006,\"comment\":\"SMT-6\"}"
+                                            ",{\"enable\":false,\"modelName\":\"DM300X-7\",\"serviceIp\" : \"192.168.31.217\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3007,\"comment\":\"SMT-7\"}"
+                                            ",{\"enable\":false,\"modelName\":\"DM300X-8\",\"serviceIp\" : \"192.168.31.218\",\"deviceIp\":\"192.168.31.77\",\"devicePort\":3008,\"comment\":\"SMT-8\"}"
                                             "]").toString();
 
         _setting->endGroup();
@@ -251,7 +252,7 @@ private:
     QSettings *_setting;
 
 public :
-    QString path = "/etc/ateam.conf";
+    QString path = "/etc/dm300xCenterController.conf";
 
 
     AtSettings(QObject *parent) {

@@ -32,3 +32,5 @@ HEADERS += \
     ay_tcp_server.h \
     ay_congex_tcp_client.h \
     ay_system.h
+
+DISTFILES +=
