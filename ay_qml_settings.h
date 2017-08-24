@@ -16,7 +16,8 @@ class AtQmlSettings : public AtController
     Q_PROPERTY(QString generalDeviceNoRead READ getGeneralDeviceNoRead WRITE setGeneralDeviceNoRead NOTIFY changedGeneralDeviceNoRead)
     Q_PROPERTY(QString generalDeviceEndingSymbol READ getGeneralDeviceEndingSymbol WRITE setGeneralDeviceEndingSymbol NOTIFY changedGeneralDeviceEndingSymbol)
     Q_PROPERTY(QString generalUserRequest READ getGeneralUserRequest WRITE setGeneralUserRequest NOTIFY changedGeneralUserRequest)
-    Q_PROPERTY(QString generalUserEndingSymbol READ getGeneralUserEndingSymbol WRITE setGeneralUserEndingSymbol NOTIFY changedGeneralUserEndingSymbol)
+    Q_PROPERTY(QString generalUserRequestEndingSymbol READ getGeneralUserRequestEndingSymbol WRITE setGeneralUserRequestEndingSymbol NOTIFY changedGeneralUserRequestEndingSymbol)
+    Q_PROPERTY(QString generalUserResponseEndingSymbol READ getGeneralUserResponseEndingSymbol WRITE setGeneralUserResponseEndingSymbol NOTIFY changedGeneralUserResponseEndingSymbol)
 
     /* Nic */
     Q_PROPERTY(QString nicType READ getNicType WRITE setNicType NOTIFY changedNicType)
@@ -35,10 +36,26 @@ class AtQmlSettings : public AtController
     Q_PROPERTY(bool systemResetDefault READ execSystemResetDefault)
     Q_PROPERTY(QString systemSysUpgrade WRITE execSystemSysUpgrade NOTIFY changedSystemSysUpgrade)
     Q_PROPERTY(QStringList systemListUpgradeImages READ getSystemListUpgradeImages NOTIFY changedSystemListUpgradeImages)
+    Q_PROPERTY(QString systemDate WRITE setSystemDate NOTIFY changedSystemDate)
+    Q_PROPERTY(QString systemTime WRITE setSystemTime NOTIFY changedSystemTime)
+    Q_PROPERTY(QString systemNtpServer READ getSystemNtpServer WRITE setSystemNtpServer NOTIFY changedSystemNtpServer)
+    Q_PROPERTY(bool systemEnableNtp READ getSystemEnableNtp WRITE setSystemEnableNtp NOTIFY changedSystemEnableNtp)
+    Q_PROPERTY(bool systemStartNtp READ execSystemStartNtp)
+    Q_PROPERTY(bool systemStopNtp READ execSystemStopNtp)
+    Q_PROPERTY(bool systemMountCifs READ execSystemMountCifs)
 
     /* Tcp Server */
     Q_PROPERTY(int tcpServerPort READ getTcpServerPort WRITE setTcpServerPort NOTIFY changedTcpServerPort)
     Q_PROPERTY(int tcpServerMaxClients READ getTcpServerMaxClients WRITE setTcpServerMaxClients  NOTIFY changedTcpServerMaxClients )
+
+    /* Cifs */
+    Q_PROPERTY(bool cifsEnable READ getCifsEnable WRITE setCifsEnable NOTIFY changedCifsEnable)
+    Q_PROPERTY(int cifsMode READ getCifsMode WRITE setCifsMode  NOTIFY changedCifsMode)
+    Q_PROPERTY(QString cifsAddress READ getCifsAddress WRITE setCifsAddress  NOTIFY changedCifsAddress)
+    Q_PROPERTY(QString cifsUsername READ getCifsUsername WRITE setCifsUsername  NOTIFY changedCifsUsername)
+    Q_PROPERTY(QString cifsPassword READ getCifsPassword WRITE setCifsPassword  NOTIFY changedCifsPassword)
+    Q_PROPERTY(QString cifsMountPath READ getCifsMountPath WRITE setCifsMountPath  NOTIFY changedCifsMountPath)
+    Q_PROPERTY(QString cifsLogFormat READ getCifsLogFormat WRITE setCifsLogFormat NOTIFY changedCifsLogFormat)
 
 
 public :
@@ -55,8 +72,11 @@ private :
     void setGeneralDeviceEndingSymbol(QString val);
     QString getGeneralUserRequest();
     void setGeneralUserRequest(QString val);
-    QString getGeneralUserEndingSymbol();
-    void setGeneralUserEndingSymbol(QString val);
+    QString getGeneralUserRequestEndingSymbol();
+    void setGeneralUserRequestEndingSymbol(QString val);
+    QString getGeneralUserResponseEndingSymbol();
+    void setGeneralUserResponseEndingSymbol(QString val);
+
 
     /* Nic */
     QString getNicType();
@@ -80,12 +100,37 @@ private :
     void execSystemSysUpgrade(QString val);
     bool execSystemResetDefault();
     QStringList getSystemListUpgradeImages();
-
+    void setSystemDate(QString val);
+    void setSystemTime(QString val);
+    QString getSystemNtpServer();
+    void setSystemNtpServer(QString val);
+    bool getSystemEnableNtp();
+    void setSystemEnableNtp(bool val);
+    bool execSystemStartNtp();
+    bool execSystemStopNtp();
+    bool execSystemMountCifs();
     /* Tcp Server */
     int getTcpServerPort();
     void setTcpServerPort(int val);
     int getTcpServerMaxClients();
     void setTcpServerMaxClients(int val);
+
+    /* Cifs */
+    bool getCifsEnable();
+    void setCifsEnable(bool val);
+    int getCifsMode();
+    void setCifsMode(int val);
+    QString getCifsAddress();
+    void setCifsAddress(QString val);
+    QString getCifsUsername();
+    void setCifsUsername(QString val);
+    QString getCifsPassword();
+    void setCifsPassword(QString val);
+    QString getCifsMountPath();
+    void setCifsMountPath(QString val);
+    QString getCifsLogFormat();
+    void setCifsLogFormat(QString val);
+
 
 signals :
     /* Profile */
@@ -95,7 +140,8 @@ signals :
     void changedGeneralDeviceNoRead();
     void changedGeneralDeviceEndingSymbol();
     void changedGeneralUserRequest();
-    void changedGeneralUserEndingSymbol();
+    void changedGeneralUserRequestEndingSymbol();
+    void changedGeneralUserResponseEndingSymbol();
 
     /* Nic */
     void changedNicType();
@@ -110,11 +156,23 @@ signals :
     void changedSystemDescription();
     void changedSystemSysUpgrade();
     void changedSystemListUpgradeImages();
+    void changedSystemDate();
+    void changedSystemTime();
+    void changedSystemNtpServer();
+    void changedSystemEnableNtp();
 
     /* Tcp Server */
     void changedTcpServerPort();
     void changedTcpServerMaxClients();
 
+    /* Cifs */
+    void changedCifsEnable();
+    void changedCifsMode();
+    void changedCifsAddress();
+    void changedCifsUsername();
+    void changedCifsPassword();
+    void changedCifsMountPath();
+    void changedCifsLogFormat();
 };
 
 #endif // AY_QML_SETTINGS_H

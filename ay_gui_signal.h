@@ -11,8 +11,8 @@ public :
 
 signals:
     void guiStatusChanged(int id,bool status);
-    void guiSnChanged(int id, QString sn);
-    void guiUserRequstTimeChanged(int id);
+    void guiSnChanged(int id, QString sn, QString dateTime);
+    void guiUserRequstTimeChanged(int id, QString dateTime);
 };
 
 

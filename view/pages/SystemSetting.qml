@@ -14,7 +14,7 @@ AtSettingTemplate {
     function execSysReboot() {
         sysDialog.$text = "系统立即重新开机?";
         sysDialog.$cbOnYes = function () {
-            var exec = qmlSettings.systemReboot
+            var exec = qmlSettings.systemReboot;
         }
         sysDialog.$cbOnNo = function() {
 
@@ -26,7 +26,7 @@ AtSettingTemplate {
     function execSysShutdown() {
         sysDialog.$text = "系统立即关机?";
         sysDialog.$cbOnYes = function () {
-            var exec = qmlSettings.systemShutdown
+            var exec = qmlSettings.systemShutdown;
         }
         sysDialog.open();
     }
@@ -34,13 +34,13 @@ AtSettingTemplate {
     function execSysUpgrade() {
 
         console.log("upgradeImages");
-        var upgradeImages = qmlSettings.systemListUpgradeImages
+        var upgradeImages = qmlSettings.systemListUpgradeImages;
 
         sysDialog.$icon = "Warning";
         if ( upgradeImages !== null && upgradeImages.length > 0 ) {
             sysDialog.$text = "侦测到更新档，执行更新?";
             sysDialog.$cbOnYes = function () {
-                upgradeProgressDialog.open()
+                upgradeProgressDialog.open();
                 qmlSettings.systemSysUpgrade = upgradeImages[0];
             }
         } else {
@@ -51,7 +51,7 @@ AtSettingTemplate {
                 execSysUpgrade();
             }
         }
-        sysDialog.open()
+        sysDialog.open();
     }
 
     function execResetDefault() {
@@ -60,11 +60,11 @@ AtSettingTemplate {
         sysDialog.$text = "确认回复出厂值?";
         sysDialog.$cbOnYes = function () {
             var result = qmlSettings.systemResetDefault;
-            qmlSettings.systemReboot
+            var exec  = qmlSettings.systemReboot;
 
         }
         sysDialog.$cbOnNo = function () {}
-        sysDialog.open()
+        sysDialog.open();
     }
 
 

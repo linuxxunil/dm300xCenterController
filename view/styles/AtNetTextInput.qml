@@ -10,7 +10,7 @@ RowLayout {
     property string $address : "0.0.0.0"
     property bool $isChanged : false
     property int init : 0
-    property var $cbOnTextChanged
+    property var $cbOnDisplayTextChanged : null
     property bool $readOnly : false
     property bool $visible: true
 
@@ -45,13 +45,13 @@ RowLayout {
             //acceptableInput : true
             text : $address.split(".")[0]
             readOnly: $readOnly
-            onTextChanged: {
+            onDisplayTextChanged: {
                 if ( ++init > 4 ) {
                     var val = one.text + "."
                              + $address.split(".")[1] + "."
                              + $address.split(".")[2] + "."
                              + $address.split(".")[3];
-                    netTextInput.$cbOnTextChanged(val)
+                    netTextInput.$cbOnDisplayTextChanged(val)
                     //console.log(val)
                 }
 
@@ -82,14 +82,14 @@ RowLayout {
             readOnly: $readOnly
             text : $address.split(".")[1]
 
-            onTextChanged: {
+            onDisplayTextChanged: {
 
                 if ( ++init > 4 ) {
                     var val = $address.split(".")[0] + "."
                              + two.text + "."
                              + $address.split(".")[2] + "."
                              + $address.split(".")[3];
-                    netTextInput.$cbOnTextChanged(val)
+                    netTextInput.$cbOnDisplayTextChanged(val)
                     //console.log(val)
                 }
             }
@@ -118,14 +118,14 @@ RowLayout {
             readOnly: $readOnly
             text : $address.split(".")[2]
 
-            onTextChanged: {
+            onDisplayTextChanged: {
 
                 if ( ++init > 4 ) {
                     var val = $address.split(".")[0] + "."
                              + $address.split(".")[1] + "."
                              + three.text + "."
                              + $address.split(".")[3];
-                    netTextInput.$cbOnTextChanged(val)
+                    netTextInput.$cbOnDisplayTextChanged(val)
                     //console.log(val)
                 }
             }
@@ -155,14 +155,14 @@ RowLayout {
             text : $address.split(".")[3]
             readOnly: $readOnly
 
-            onTextChanged: {
+            onDisplayTextChanged: {
 
                 if ( ++init > 4 ) {
                     var val = $address.split(".")[0] + "."
                              + $address.split(".")[1] + "."
                              + $address.split(".")[2] + "."
                              + four.text;
-                    netTextInput.$cbOnTextChanged(val)
+                    netTextInput.$cbOnDisplayTextChanged(val)
                     //console.log(val)
                 }
             }

@@ -15,13 +15,16 @@ AtSettingTemplate {
     property int _heartbeatTimeMax : 86400
     //property var _configs : JSON.parse(qmlSettings.profileConfigs);
     property bool _isChanged : false
+    property var _configs : JSON.parse(qmlSettings.profileConfigs);
+    property var _model : []
+    signal visibleChanged()
 
     $cbSaveButton : function() {
         if ( _isChanged ) {
             //nicDialog.$text = "系统必须重新启动才会生效,是否立即重启!?"
-            profileDialog.open()
+            profileDialog.open();
         } else {
-            settingViews.pop()
+            settingViews.pop();
         }
     }
 
@@ -29,40 +32,134 @@ AtSettingTemplate {
         id : profileDialog
         $text : "系统必须重新启动才会生效,是否立即重启!?"
         $cbOnYes : function () {
-            var exec = qmlSettings.systemReboot
+            var exec = qmlSettings.systemReboot;
         }
         $cbOnNo : function () {
-            settingViews.pop()
+            settingViews.pop();
         }
     }
 
     AtSettingContent {
-        id: generalSetting
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.leftMargin : 8
-        anchors.rightMargin: 8
-        anchors.bottomMargin: 16
-        anchors.topMargin: 24
+        id: profileSetting
+//        anchors.left: parent.left
+//        anchors.right: parent.right
+//        anchors.top: parent.top
+//        anchors.bottom: parent.bottom
+//        anchors.leftMargin : 8
+//        anchors.rightMargin: 8
+//        anchors.bottomMargin: 16
+//        anchors.topMargin: 24
 
-        TextArea {
-            //clip : true
-            verticalScrollBarPolicy :Qt.ScrollBarAlwaysOn
-            anchors.fill: parent
-            wrapMode : TextEdit.Wrap
-            verticalAlignment : Text.AlignTop
-            textFormat : TextEdit.PlainText
-            text : qmlSettings.profileConfigs
+        ColumnLayout {
+            RowLayout {
+                Text {
+                    text : "选择设备 : "
+                }
 
-            onTextChanged: {
-                if ( qmlSettings.profileConfigs !== text) {
-                    qmlSettings.profileConfigs = text;
-                    _isChanged = true;
+                AtComboBox {
+                     id : profiles
+                     $model: {
+                         for ( var i=1; i<=_configs.length; i++ ) {
+                            _model[i-1] = "" + i ;
+                         }
+                         return _model;
+                     }
+                     $currentIndex : 0
+                }
+
+                AtCheckBox {
+                    checked: _configs[profiles.currentIndex].visible
+                    text : "显示"
+                    onClicked: {
+                        _configs[profiles.currentIndex].visible = checked;
+                        qmlSettings.profileConfigs = JSON.stringify(_configs);
+                        _isChanged = true;
+                    }
+                }
+            }
+            RowLayout {
+                Text {
+                    text: "机型 : "
+                }
+                AtTextInput {
+                    $width : 200
+                    $text : _configs[profiles.currentIndex].modelName
+                    $cbOnDisplayTextChanged : function(val) {
+                        _configs[profiles.currentIndex].modelName = val
+                        qmlSettings.profileConfigs = JSON.stringify(_configs);
+                        _isChanged = true;
+                    }
+
+                }
+
+                Text {
+                    text: "说明 : "
+                }
+                AtTextInput {
+                    $width : 200
+                    $text : _configs[profiles.currentIndex].comment
+                    $cbOnDisplayTextChanged : function(val) {
+                        _configs[profiles.currentIndex].comment = val
+                        qmlSettings.profileConfigs = JSON.stringify(_configs);
+                        _isChanged = true;
+                    }
+                }
+
+            }
+
+            RowLayout {
+                AtNetTextInput {
+                    $name : "ServiceIP位置"
+                    $address : _configs[profiles.currentIndex].serviceIp
+                    $cbOnDisplayTextChanged : function(val) {
+                        _configs[profiles.currentIndex].serviceIp = val
+                        qmlSettings.profileConfigs = JSON.stringify(_configs);
+                        _isChanged = true;
+                    }
+                }
+            }
+
+            RowLayout {
+                AtNetTextInput {
+
+                    $name : "ScannerIP位置"
+                    $address : _configs[profiles.currentIndex].deviceIp
+                    $cbOnDisplayTextChanged : function(val) {
+                        _configs[profiles.currentIndex].deviceIp = val
+                        qmlSettings.profileConfigs = JSON.stringify(_configs);
+                        _isChanged = true;
+                    }
+                }
+                Text {
+                    text : " Port : "
+                }
+
+                AtTextInput {
+                    $width : 55
+                    $text :  _configs[profiles.currentIndex].devicePort
+                    $cbOnDisplayTextChanged : function(val) {
+                        _configs[profiles.currentIndex].devicePort = parseInt(val);
+                        qmlSettings.profileConfigs = JSON.stringify(_configs);
+                        _isChanged = true;
+                    }
                 }
             }
         }
     }
-
 }
+
+//        TextArea {
+//            //clip : true
+//            verticalScrollBarPolicy :Qt.ScrollBarAlwaysOn
+//            anchors.fill: parent
+//            wrapMode : TextEdit.Wrap
+//            verticalAlignment : Text.AlignTop
+//            textFormat : TextEdit.PlainText
+//            text : qmlSettings.profileConfigs
+
+//            onTextChanged: {
+//                if ( qmlSettings.profileConfigs !== text) {
+//                    qmlSettings.profileConfigs = text;
+//                    _isChanged = true;
+//                }
+//            }

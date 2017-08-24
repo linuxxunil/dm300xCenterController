@@ -2,6 +2,7 @@
 #include <QTcpSocket>
 #include <QSignalMapper>
 #include "ay_application.h"
+#include "ay_systime.h"
 AtTcpServer *AtTcpServer::_instance = 0;
 QThread *AtTcpServer::_thread = 0;
 
@@ -67,21 +68,22 @@ void AtTcpServer::handleClientReadyRead(QObject *socketObject)
         if ( index >= 0 ) {
             bool ok;
             QString command = socket->readAll();
-            if ( command == setting.general.userRequest + setting.general.userEndingSymbol) {
+            if ( command == setting.general.userRequest + setting.general.userRequestEndingSymbol) {
                 QHostAddress ipv4Address(socket->localAddress().toIPv4Address());
                 QString address = ipv4Address.toString();
+
                 AtCongexTcpClient *congexClient =
                         ((AtApplication *)root)->workThread->list[address];
 
-
                 if ( congexClient != NULL ) {
                     QString data = congexClient->getData();
-                    qDebug() << data;
+//                    qDebug() << "Id : " << congexClient->getId();
+//                    qDebug() << "   Data = " <<  data;
                     if ( data != "" && data != setting.general.deviceNoRead ) {
-                        data += setting.general.userEndingSymbol;
+                        data += setting.general.userResponseEndingSymbol;
                         socket->write(data.toUtf8());
                     }
-                    ((AtApplication *)root)->guiSignal->guiUserRequstTimeChanged(congexClient->getId());
+                    ((AtApplication *)root)->guiSignal->guiUserRequstTimeChanged(congexClient->getId(),SysTime::getDateTime());
                 }
                 } else {
                     qDebug() << "This address don't support.";

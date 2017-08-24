@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     ay_gui_signal.cpp \
     ay_tcp_server.cpp \
     ay_congex_tcp_client.cpp \
-    ay_system.cpp
+    ay_system.cpp \
+    ay_systime.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,6 +32,7 @@ HEADERS += \
     ay_gui_signal.h \
     ay_tcp_server.h \
     ay_congex_tcp_client.h \
-    ay_system.h
+    ay_system.h \
+    ay_systime.h
 
 DISTFILES +=

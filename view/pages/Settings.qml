@@ -23,7 +23,7 @@ AtMainTemplate {
         spacing : 16
         AtMainItem {
             $itemName : "一般设定"
-            $itemImagePath : "../images/about48.ico"
+            $itemImagePath : "../images/general48.ico"
             $itemUrl : "GeneralSetting.qml"
         }
 
@@ -37,6 +37,18 @@ AtMainTemplate {
             $itemName : "Profile设定"
             $itemImagePath : "../images/profile48.ico"
             $itemUrl : "ProfileSetting.qml"
+        }
+
+        AtMainItem {
+            $itemName : "网络邻居"
+            $itemImagePath : "../images/cifs48.ico"
+            $itemUrl : "CifsSetting.qml"
+        }
+
+        AtMainItem {
+            $itemName : "时间设定"
+            $itemImagePath : "../images/time48.ico"
+            $itemUrl : "TimeSetting.qml"
         }
 
         AtMainItem {

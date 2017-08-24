@@ -21,10 +21,10 @@ void AtQmlSettings::setProfileConfigs(QString val)
 
     for (int i=0; i<setting.profile.configsArray.size(); i++ ) {
         QJsonObject configsObj = setting.profile.configsArray[i].toObject();
-
-
         AtCongexTcpClient *client = ((AtApplication*) root)->workThread->list[configsObj["serviceIp"].toString()];
-        client->setEnable(configsObj["enable"].toBool());
+        if ( client != NULL ) {
+            client->setEnable(configsObj["enable"].toBool());
+        }
     }
 }
 
@@ -53,15 +53,25 @@ void AtQmlSettings::setGeneralDeviceNoRead(QString val)
     setting.general.sync();
 }
 
-QString AtQmlSettings::getGeneralUserEndingSymbol()
+QString AtQmlSettings::getGeneralUserRequestEndingSymbol()
 {
-    return setting.general.userEndingSymbol;
+    return setting.general.userRequestEndingSymbol;
 }
 
-void AtQmlSettings::setGeneralUserEndingSymbol(QString val)
+void AtQmlSettings::setGeneralUserRequestEndingSymbol(QString val)
 {
-    val.replace("\\r", "\r" ).replace("\\n","\n");
-    setting.general.userEndingSymbol = val;
+    setting.general.userRequestEndingSymbol = val;
+    setting.general.sync();
+}
+
+QString AtQmlSettings::getGeneralUserResponseEndingSymbol()
+{
+    return setting.general.userResponseEndingSymbol;
+}
+
+void AtQmlSettings::setGeneralUserResponseEndingSymbol(QString val)
+{
+    setting.general.userResponseEndingSymbol = val;
     setting.general.sync();
 }
 
@@ -75,6 +85,7 @@ void AtQmlSettings::setGeneralUserRequest(QString val)
     setting.general.userRequest = val;
     setting.general.sync();
 }
+
 
 
 /* Network */
@@ -187,6 +198,65 @@ QStringList AtQmlSettings::getSystemListUpgradeImages()
     return AtSystem::getUpgradeImages();
 }
 
+void AtQmlSettings::setSystemDate(QString val)
+{
+    AtSystem::setSystemDate(val);
+//    QStringList date = val.split("/");
+//    AtRtc::setDate(QString::number(((QString)date[0]).right(2),10),
+//                   QString::number(date[1],10),
+//                   QString::number(date[2],10));
+}
+
+void AtQmlSettings::setSystemTime(QString val)
+{
+    AtSystem::setSystemTime(val);
+//    QStringList time = val.split(":");
+//    AtRtc::setDate(QString::number(time[0],10),
+//                   QString::number(time[1],10),
+//                   QString::number(time[2],10));
+}
+
+QString AtQmlSettings::getSystemNtpServer()
+{
+    return setting.system.ntpServer;
+}
+
+void AtQmlSettings::setSystemNtpServer(QString val)
+{
+    setting.system.ntpServer = val;
+    setting.system.sync();
+    AtSystem::setNtpServer(val);
+}
+
+bool AtQmlSettings::getSystemEnableNtp()
+{
+    return setting.system.ntpEnable;
+}
+
+void AtQmlSettings::setSystemEnableNtp(bool val)
+{
+    if ( val ) AtSystem::execStartNtp();
+    else AtSystem::execStopNtp();
+    setting.system.ntpEnable = val;
+    setting.system.sync();
+}
+
+
+bool AtQmlSettings::execSystemStartNtp()
+{
+    return AtSystem::execStartNtp();
+}
+
+bool AtQmlSettings::execSystemStopNtp()
+{
+    return AtSystem::execStopNtp();
+}
+
+bool AtQmlSettings::execSystemMountCifs()
+{
+    return AtSystem::execMountCifs();
+}
+
 /* Tcp Server */
 int AtQmlSettings::getTcpServerPort()
 {
@@ -207,4 +277,83 @@ void AtQmlSettings::setTcpServerMaxClients(int val)
 {
     setting.tcpServer.maxClients = val;
     setting.tcpServer.sync();
+}
+
+/* Cifs */
+bool AtQmlSettings::getCifsEnable()
+{
+    return setting.cifs.enable;
+}
+
+void AtQmlSettings::setCifsEnable(bool val)
+{
+    setting.cifs.enable = val;
+    setting.cifs.sync();
+}
+
+int AtQmlSettings::getCifsMode()
+{
+    return setting.cifs.mode;
+}
+
+void AtQmlSettings::setCifsMode(int val)
+{
+    setting.cifs.mode = val;
+    setting.cifs.sync();
+}
+
+QString AtQmlSettings::getCifsAddress()
+{
+    return setting.cifs.address;
+}
+
+void AtQmlSettings::setCifsAddress(QString val)
+{
+    setting.cifs.address = val;
+    setting.cifs.sync();
+}
+
+QString AtQmlSettings::getCifsUsername()
+{
+    return setting.cifs.username;
+}
+
+void AtQmlSettings::setCifsUsername(QString val)
+{
+    setting.cifs.username = val;
+    setting.cifs.sync();
+}
+
+QString AtQmlSettings::getCifsPassword()
+{
+    return setting.cifs.password;
+}
+
+void AtQmlSettings::setCifsPassword(QString val)
+{
+    setting.cifs.password = val;
+    setting.cifs.sync();
+}
+
+
+QString AtQmlSettings::getCifsMountPath()
+{
+    return setting.cifs.mountPath;
+}
+
+void AtQmlSettings::setCifsMountPath(QString val)
+{
+    setting.cifs.mountPath = val;
+    setting.cifs.sync();
+}
+
+QString AtQmlSettings::getCifsLogFormat()
+{
+    return setting.cifs.logFormat;
+}
+
+void AtQmlSettings::setCifsLogFormat(QString val)
+{
+    setting.cifs.logFormat = val;
+    setting.cifs.sync();
 }

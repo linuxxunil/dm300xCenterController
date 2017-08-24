@@ -14,9 +14,9 @@ AtSettingTemplate {
     $cbSaveButton : function() {
         if ( _isChanged ) {
             //nicDialog.$text = "系统必须重新启动才会生效,是否立即重启!?"
-            nicDialog.open()
+            nicDialog.open();
         } else {
-            settingViews.pop()
+            settingViews.pop();
         }
     }
 
@@ -24,10 +24,10 @@ AtSettingTemplate {
         id : nicDialog
         $text : "系统必须重新启动才会生效,是否立即重启!?"
         $cbOnYes : function () {
-            var exec = qmlSettings.systemReboot
+            var exec = qmlSettings.systemReboot;
         }
         $cbOnNo : function () {
-            settingViews.pop()
+            settingViews.pop();
         }
     }
 
@@ -63,7 +63,7 @@ AtSettingTemplate {
                 $name : '网络地址'
                 $address : qmlSettings.nicAddress
                 $readOnly: _isDhcp
-                $cbOnTextChanged : function(val) {
+                $cbOnDisplayTextChanged : function(val) {
                     _isChanged = true
                     address.$address = val
                     qmlSettings.nicAddress = val
@@ -75,7 +75,7 @@ AtSettingTemplate {
                 $name : '网络掩码'
                 $address : qmlSettings.nicNetmask
                 $readOnly: _isDhcp
-                $cbOnTextChanged : function(val) {
+                $cbOnDisplayTextChanged : function(val) {
                     _isChanged = true
                     netmask.$address = val
                     qmlSettings.nicNetmask = val
@@ -87,7 +87,7 @@ AtSettingTemplate {
                 $name : '默认网关'
                 $address : qmlSettings.nicGateway
                 $readOnly: _isDhcp
-                $cbOnTextChanged : function(val) {
+                $cbOnDisplayTextChanged : function(val) {
                     _isChanged = true
                     gateway.$address = val
                     qmlSettings.nicGateway = val
@@ -99,7 +99,7 @@ AtSettingTemplate {
                 $name : '域名解析'
                 $address : qmlSettings.nicDNS1
                 $readOnly: _isDhcp
-                $cbOnTextChanged : function(val) {
+                $cbOnDisplayTextChanged : function(val) {
                     _isChanged = true
                     dns1.$address = val
                     qmlSettings.nicDNS1 = val

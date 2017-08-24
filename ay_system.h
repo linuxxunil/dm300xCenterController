@@ -4,6 +4,7 @@
 #include "ay_controller.h"
 #include <QProcess>
 #include <QHash>
+#include <QMutex>
 
 class AtSystem : public AtController
 {
@@ -14,7 +15,7 @@ private :
     ~AtSystem(){}
     static QProcess *_process;
     static QString _key;//"http://www.ateam.com.cn";
-
+    static QMutex _logMutex;
 public:
     static void execUpgrade(QString val);
     static bool execReboot();
@@ -29,6 +30,11 @@ public:
     static bool execSetTcpRecycle();
     static bool execSetTcpReuse();
     static bool setIpAddress();
+    static bool execStartNtp();
+    static bool execStopNtp();
+    static bool setNtpServer(QString val);
+    static bool execMountCifs();
+    static bool execMountRamDisk(QString path, int size);//MB
 };
 
 #endif // AY_UPGRADE_H

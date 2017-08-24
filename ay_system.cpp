@@ -1,10 +1,12 @@
 #include "ay_system.h"
+#include "ay_systime.h"
 #include <QFile>
 //# tar -zcvf - pma|openssl des3 -salt -k password | dd of=pma.des3
 //# dd if=pma.des3 |openssl des3 -d -k password|tar zxf -
 
 QString AtSystem::_key = "http://www.ateam.com.cn";
 QProcess *AtSystem::_process = new QProcess();
+QMutex AtSystem::_logMutex;
 
 bool AtSystem::execReboot()
 {
@@ -54,15 +56,22 @@ bool AtSystem::execSetTcpReuse()
 
 bool AtSystem::writeLog(QString text)
 {
-    QFile f("/var/log/ateam.log");
-    if(!f.open(QIODevice::ReadWrite | QIODevice::Append)){
-        qDebug()<<"Error opening the file";
-        return false;
-    }
-    QTextStream outStream(&f);
+    _logMutex.lock();
 
-    outStream << text + "\n";
-    f.close();
+    if ( setting.cifs.enable ) {
+
+        QString fileName = "/" + SysTime::getDate() + ".txt";
+        QFile f(setting.cifs.mountPath + fileName);
+        if(!f.open(QIODevice::ReadWrite | QIODevice::Append)){
+            qDebug()<<"Error opening the file";
+            return false;
+        }
+        QTextStream outStream(&f);
+
+        outStream << text + "\r\n";
+        f.close();
+    }
+    _logMutex.unlock();
     return true;
 }
 
@@ -117,3 +126,46 @@ void AtSystem::execUpgrade(QString val)
     arg << "upgrade" << _key << val;
     _process->startDetached(cmd, arg );
 }
+
+bool AtSystem::execStartNtp()
+{
+    QString cmd = "systemctl enable ntp > /dev/null; /etc/init.d/ntp start > /dev/null";
+    return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
+}
+
+bool AtSystem::execStopNtp()
+{
+    QString cmd = "systemctl disable ntp > /dev/null ; /etc/init.d/ntp stop > /dev/null";
+    return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
+}
+
+
+bool AtSystem::setNtpServer(QString val) //
+{
+    QString cmd;
+    cmd = "NTPSERVER=`grep \"^server\" /etc/ntp.conf -m 1` && "
+          "sed -i \"s/^${NTPSERVER}/server " + val + "/g\" /etc/ntp.conf;"
+          "systemctl restart ntp";
+
+    return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
+}
+
+bool AtSystem::execMountCifs()
+{
+    QString cmd;
+
+    cmd = "mkdir -p " + setting.cifs.mountPath + ";"
+          "umount " + setting.cifs.mountPath + " 2> /dev/null;"
+          "mount -t cifs -o username=\'"  + setting.cifs.username + "\',password=\'" + setting.cifs.password + "\' "
+          "//" + setting.cifs.address + " " + setting.cifs.mountPath;
+    return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
+}
+
+bool AtSystem::execMountRamDisk(QString path, int size)
+{
+    QString cmd = "mkdir -p " + path + ";"
+                  "umount " + path + " 2> /dev/null;"
+                  "mount -t tmpfs -o size="+ QString::number(size,10) + "M tmpfs " + path;
+    return (QProcess::execute("/bin/bash", QStringList() << "-c" <<  cmd)==0)?true:false;
+}
+

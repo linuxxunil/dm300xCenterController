@@ -14,10 +14,10 @@ Window {
     width: 800
     height: 480
     visible: true
-    property var defStatus : ["断线","连线"];
+    property var defStatus : ["断线","连线","未启用"];
     property var defControl : ["关闭","启用"];
     property var _configs : JSON.parse(qmlSettings.profileConfigs);
-
+    property var _table: []
     function getSystemDateTime() {
         var dateTime = Qt.formatDateTime(new Date(), "yyyy/MM/dd HH:mm:ss");
         return dateTime;
@@ -34,7 +34,6 @@ Window {
             id: listView
             anchors.fill: parent
             anchors.bottomMargin: 25
-
             model: listModel
             clip: false
 
@@ -43,26 +42,31 @@ Window {
                 title: "IP位置"
                 width: 150
             }
+
             TableViewColumn {
-                role: "comment"
-                title: "说明"
-                width : 150
+                role: "modelName"
+                title: "机型"
             }
+
             TableViewColumn {
                 role: "status"
                 title: "状态"
                  width: 50
                 delegate : Text {
-
+                    horizontalAlignment: Text.Center
                     text : styleData.value
-                    color : (styleData.value === defStatus[0])?"red":"green";
-
-
+                    color : {
+                        if ( styleData.value === defStatus[0] )
+                            return "red";
+                        else if ( styleData.value === defStatus[1] )
+                            return "green"
+                        else return "blue";
+                    }
                 }
             }
             TableViewColumn {
                 role: "sn"
-                title: "SN"
+                title: "SN(序列号)"
             }
 
             TableViewColumn {
@@ -74,21 +78,26 @@ Window {
                 role: "deviceResponseTime"
                 title: "接收设备最后时间"
             }
-            TableViewColumn {
-                role: "modelName"
-                title: "机型"
-            }
 
+
+            TableViewColumn {
+                role: "comment"
+                title: "说明"
+                width : 150
+            }
             TableViewColumn {
                 role: "control"
                 title: "控制"
                 delegate: Button {
                     text : styleData.value
                     onClicked: {
+                        var rowIndex = parseInt(_table[styleData.row]);
+
                         var index = defControl.indexOf(text);
                         index ^= 1;
                         text = defControl[index];
-                        _configs[styleData.row].enable = (index==0)?true:false;
+                        _configs[rowIndex].enable = (index==0)?true:false;
+                        listModel.get(styleData.row)["status"] = (index==0)?defStatus[0]:defStatus[2];
                         qmlSettings.profileConfigs = JSON.stringify(_configs);
                     }
                 }
@@ -119,38 +128,50 @@ Window {
     }
     Component.onCompleted: {
         //{\"modelName\":\"DM300X-1\",\"serviceIp\" : \"192.168.33.211\",\"deviceIp\":\"192.168.33.51\",\"devicePort\":\"80\",\"comment\":\"SMT-1\"}
+        var row = 0;
         for ( var i=0; i<_configs.length; i++ ) {
-            listModel.append({
-                "modelName": _configs[i].modelName,
-                "ipAddress": _configs[i].serviceIp,
-                "comment" : _configs[i].comment,
-                "status" : defStatus[0],
-                "statusColor" : "red",
-                "sn" : "",
-                "userRequestTime" : "",
-                "deviceResponseTime" : "",
-                "control" : (_configs[i].enable)?defControl[0]:defControl[1]
-            });
+            if ( _configs[i].visible === true ) {
+                listModel.append({
+                    "modelName": _configs[i].modelName,
+                    "ipAddress": _configs[i].serviceIp,
+                    "comment" : _configs[i].comment,
+                    "status" : (_configs[i].enable)?defStatus[0]:defStatus[2],
+                    "statusColor" : "red",
+                    "sn" : "",
+                    "userRequestTime" : "",
+                    "deviceResponseTime" : "",
+                    "control" : (_configs[i].enable)?defControl[0]:defControl[1]
+                });
+                _table[row++] = i; // id
+            }
+
         }
+        console.log(_table);
     }
 
     Connections {
         target: Core
         onGuiStatusChanged : { // id , status
-            console.log("id="+id+",status="+status)
-            var obj = listModel.get(id);
-            obj["status"] = defStatus[(status)?1:0];
+            //console.log("id="+id+",status="+status)
+            var rowIndex = _table.indexOf(id);
+            var obj = listModel.get(rowIndex);
+            if ( _configs[id].enable ) {
+                obj["status"] = defStatus[(status)?1:0];
+            } else {
+                obj["status"] = defStatus[2]; //未启用
+            }
         }
-        onGuiSnChanged : { // id , sn
-            var obj = listModel.get(id);
+        onGuiSnChanged : { // id , sn , dateTime
+            var rowIndex = _table.indexOf(id);
+            var obj = listModel.get(rowIndex);
             obj["sn"] = sn;
-            obj["deviceResponseTime"] = getSystemDateTime();
+            obj["deviceResponseTime"] = dateTime; //getSystemDateTime();
             obj["userRequestTime"] = "";
         }
 
-        onGuiUserRequstTimeChanged : {
+        onGuiUserRequstTimeChanged : { // id, dateTime
             var obj = listModel.get(id);
-            obj["userRequestTime"] = getSystemDateTime();
+            obj["userRequestTime"] = dateTime;//getSystemDateTime();
         }
     }
 

@@ -18,7 +18,7 @@ AtController::AtController()     {
     if ( !init ) {
         // for old hardware
         setting.version.hardwareVersion = (setting.version.hardwareVersion=="0.1")?"0.1":"1.0";
-        setting.version.softwareVersion = "1.0.0.0.0";
+        setting.version.softwareVersion = "1.0.0.0.2";
         setting.version.description = "Standard";
         setting.version.contact = "www.ateam.com.cn";
 
@@ -36,6 +36,10 @@ AtController::~AtController() {
 }
 
 /*
+v1.0.0.0.2
+v1.0.0.0.1
+* add Cifs
+* add Time Setting
 v1.0.0.0.0
 * add Settings Page
 *   - General

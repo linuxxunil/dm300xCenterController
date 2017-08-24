@@ -16,10 +16,10 @@ AtSettingTemplate {
 
     $cbSaveButton : function() {
         if ( _isChanged ) {
-            //nicDialog.$text = "系统必须重新启动才会生效,是否立即重启!?"
-            generalDialog.open()
+            //nicDialog.$text = "系统必须重新启动才会生效,是否立即重启!?";
+            generalDialog.open();
         } else {
-            settingViews.pop()
+            settingViews.pop();
         }
     }
 
@@ -27,10 +27,10 @@ AtSettingTemplate {
         id : generalDialog
         $text : "系统必须重新启动才会生效,是否立即重启!?"
         $cbOnYes : function () {
-            var exec = qmlSettings.systemReboot
+            var exec = qmlSettings.systemReboot;
         }
         $cbOnNo : function () {
-            settingViews.pop()
+            settingViews.pop();
         }
     }
 
@@ -45,7 +45,11 @@ AtSettingTemplate {
 
                 AtTextInput {
                     $width: 80
-                    $text : qmlSettings.generalDeviceNoRead
+                    $text : {
+                        var val = qmlSettings.generalDeviceNoRead
+                        val = val.replace('\r',"\\r").replace('\n',"\\n");
+                        return val;
+                    }
                     $cbOnTextChanged : function(val) {
                         qmlSettings.generalDeviceNoRead = val;
                         _isChanged = true;
@@ -60,7 +64,11 @@ AtSettingTemplate {
 
                 AtTextInput {
                     $width: 80
-                    $text : qmlSettings.generalDeviceEndingSymbol
+                    $text : {
+                        var val = qmlSettings.generalDeviceEndingSymbol
+                        val = val.replace('\r',"\\r").replace('\n',"\\n");
+                        return val;
+                    }
                     $cbOnTextChanged : function(val) {
                         qmlSettings.generalDeviceEndingSymbol = val;
                         _isChanged = true;
@@ -75,7 +83,11 @@ AtSettingTemplate {
 
                 AtTextInput {
                     $width: 80
-                    $text : qmlSettings.generalUserRequest
+                    $text : {
+                        var val = qmlSettings.generalUserRequest;
+                        val = val.replace('\r',"\\r").replace('\n',"\\n");
+                        return val;
+                    }
                     $cbOnTextChanged : function(val) {
                         qmlSettings.generalUserRequest = val
                         _isChanged = true;
@@ -85,14 +97,34 @@ AtSettingTemplate {
 
             RowLayout {
                 Text {
-                    text : "Service-Suffix : "
+                    text : "ServiceRequest-Suffix : "
                 }
 
                 AtTextInput {
                     $width: 80
-                    $text : qmlSettings.generalUserEndingSymbol
+                    $text : {
+                        var val = qmlSettings.generalUserRequestEndingSymbol;
+                        val = val.replace('\r',"\\r").replace('\n',"\\n");
+                        return val;
+                    }
                     $cbOnTextChanged : function(val) {
-                        qmlSettings.generalUserEndingSymbol = val;
+                        qmlSettings.generalUserRequestEndingSymbol = val;
+                        _isChanged = true;
+                    }
+                }
+                Text {
+                    text : "ServiceResponse-Suffix : "
+                }
+
+                AtTextInput {
+                    $width: 80
+                    $text : {
+                        var val = qmlSettings.generalUserResponseEndingSymbol;
+                        val = val.replace('\r',"\\r").replace('\n',"\\n");
+                        return val;
+                    }
+                    $cbOnTextChanged : function(val) {
+                        qmlSettings.generalUserResponseEndingSymbol = val;
                         _isChanged = true;
                     }
                 }

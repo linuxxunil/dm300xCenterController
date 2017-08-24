@@ -32,4 +32,5 @@ CheckBox {
         verticalAlignment: Text.AlignVCenter
         leftPadding: atCheckBox.indicator.width + atCheckBox.spacing
     }
+
 }

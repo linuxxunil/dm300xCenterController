@@ -25,6 +25,11 @@ AtApplication::AtApplication(int argc, char *argv[])
 void AtApplication::systemInit()
 {
     AtSystem::setIpAddress();
+    if ( setting.cifs.enable ) AtSystem::execMountCifs();
+    AtSystem::execSetTcpRecycle();
+    AtSystem::execSetTcpReuse();
+    AtSystem::execMountRamDisk(setting.cifs.mountPath, 8);
+
 }
 
 bool AtApplication::isGuiRunning()

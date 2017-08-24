@@ -45,5 +45,11 @@
         <file>view/pages/SystemSetting.qml</file>
         <file>view/images/system48.ico</file>
         <file>view/images/system.ico</file>
+        <file>view/pages/TimeSetting.qml</file>
+        <file>view/images/time48.ico</file>
+        <file>view/images/time.ico</file>
+        <file>view/pages/CifsSetting.qml</file>
+        <file>view/images/cifs48.ico</file>
+        <file>view/images/cifs.ico</file>
     </qresource>
 </RCC>

@@ -13,7 +13,7 @@ void AtWorkThread::init()
     for (int i=0; i<setting.profile.configsArray.size(); i++ ) {
         QJsonObject configsObj = setting.profile.configsArray[i].toObject();
 
-        AtCongexTcpClient *client = new AtCongexTcpClient(configsObj["enable"].toBool(),i,
+        AtCongexTcpClient *client = new AtCongexTcpClient(configsObj["enable"].toBool(),configsObj["modelName"].toString(),i,
                     configsObj["deviceIp"].toString(),configsObj["devicePort"].toInt());
         qDebug() << "DeviceIp[" + QString::number(i,10) + "]=" +  configsObj["deviceIp"].toString() + ":" + QString::number(configsObj["devicePort"].toInt(),10);
         client->start();

@@ -12,11 +12,14 @@ RowLayout {
     property int $width : 42
     property int $height : 19
     property var $cbOnTextChanged : null
+    property var $cbOnDisplayTextChanged : null
     property int $horizontalAlignment : Text.AlignLeft
     property var $validator : RegExpValidator {}
+    property var $visible: true
 
 
     id : atTextInput
+    visible: $visible
     Rectangle {
         width: $width
         height: $height
@@ -33,6 +36,14 @@ RowLayout {
             text : $text
             validator: $validator
 
+            onDisplayTextChanged: {
+                if ( _init === false ) {
+                    _init = true;
+                } else if ( $cbOnDisplayTextChanged != null ) {
+                    atTextInput.$cbOnDisplayTextChanged(text)
+                }
+            }
+
             onTextChanged: {
                 if ( _init === false ) {
                     _init = true;
@@ -40,6 +51,7 @@ RowLayout {
                     atTextInput.$cbOnTextChanged(text)
                 }
             }
+
         }
     }
 }
